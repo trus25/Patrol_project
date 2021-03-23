@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "95108c1f-7b57-4499-bb01-02c38131617b",
+		"_postman_id": "6bd5cfb2-75bd-49ea-906c-0dd37e739b03",
 		"name": "Epatrol API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1727,6 +1727,157 @@
 										"v1",
 										"owner",
 										"checkpoint",
+										"delete",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Map",
+					"item": [
+						{
+							"name": "Get Map",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/owner/map",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owner",
+										"map"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Map By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/owner/map/1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owner",
+										"map",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Map",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "latitude",
+											"value": "99",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "166",
+											"type": "text"
+										},
+										{
+											"key": "zoom",
+											"value": "11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/owner/map/store",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owner",
+										"map",
+										"store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Map",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "latitude",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "longitude",
+											"value": "33",
+											"type": "text"
+										},
+										{
+											"key": "zoom",
+											"value": "11",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/owner/map/update/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owner",
+										"map",
+										"update",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Map",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/owner/map/delete/5",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owner",
+										"map",
 										"delete",
 										"5"
 									]
