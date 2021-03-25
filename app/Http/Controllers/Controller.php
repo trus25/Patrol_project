@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\v1\Helper\ResponseHandler;
+use App\Http\Controllers\v1\Helper\CoreSystem;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,7 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->respHandler = new ResponseHandler();
+        $this->coreSystem = new CoreSystem();
     }
 
     public function authUser()
