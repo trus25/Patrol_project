@@ -133,14 +133,19 @@ class ReportController extends Controller
                 
                 if ($report)
                 {
-                    $report->end = $dateNow['time'];
-                    $report->save();
-
-                    $data = [
-                        'report' => $report,
-                    ];
-    
-                    return $this->respHandler->success('Patrol today has been stopped.', $data);
+                    if (! $report->end)
+                    {
+                        $report->end = $dateNow['time'];
+                        $report->save();
+                        
+                        $data = [
+                            'report' => $report,
+                        ];
+                        
+                        return $this->respHandler->success('Patrol today has been stopped.', $data);
+                    }
+                    else
+                        return $this->respHandler->success('Patrol already stopped.');
                 }
                 else
                 {
