@@ -164,4 +164,37 @@ class ReportController extends Controller
             return $this->respHandler->requestError($e->getMessage());
         }
 	}
+
+    /**
+     * Send report message
+     * POST api/v1/security/report/send/
+     * @param id_report
+     * @param id_checkpoint
+     * @param message
+     * @return Response
+     **/
+	public function sendReport(Request $request)
+	{
+        try
+        {
+            dd($request->post());
+            $validator = Validator::make($request->post(), [
+                'id_report' => 'required',
+                'id_checkpoint' => 'required',
+                'message' => 'required',
+            ]);
+
+            if (! $validator->fails())
+            {
+                // todo, insert to report_detail and messages
+                // check report_detail first if exist, just  insert
+            }
+            else
+                return $this->respHandler->requestError($validator->errors());
+        }
+        catch(\Exception $e)
+        {
+            return $this->respHandler->requestError($e->getMessage());
+        }
+	}
 }
