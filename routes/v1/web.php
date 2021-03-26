@@ -34,7 +34,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'security', 'namespace' => 'Security', 'middleware' => 'auth:api'], function () use ($router) {
         $router->group(['prefix' => 'report'], function () use ($router) {
-            $router->post('/start-patrol', ['uses' => 'ReportController@startPatrol', 'as' => 'security.report.startPatrol']);
+            $router->get('/start-patrol', ['uses' => 'ReportController@startPatrol', 'as' => 'security.report.startPatrol']);
             $router->post('/stop-patrol', ['uses' => 'ReportController@stopPatrol', 'as' => 'security.report.stopPatrol']);
             $router->post('/send', ['uses' => 'ReportController@sendReport', 'as' => 'security.report.sendReport']);
             // $router->post('/store', ['uses' => 'ReportController@storeReport', 'as' => 'security.report.storeReport']);

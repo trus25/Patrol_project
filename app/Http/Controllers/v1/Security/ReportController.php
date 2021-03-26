@@ -17,7 +17,7 @@ class ReportController extends Controller
 {
     /**
      * Main check status patrol, start or continue
-     * POST api/v1/security/report/start-patrol/
+     * GET api/v1/security/report/start-patrol/
      * @param id_people
      * @return Response
      **/
@@ -25,89 +25,84 @@ class ReportController extends Controller
 	{
         try
         {
-            $validator = Validator::make($request->post(), [
-                'id_people' => 'required',
-            ]);
+            $user = $this->authUser();
+            // People security not found
+            if (empty($user->people->security))
+                return $this->respHandler->success('Securities not found.');
 
-            if (! $validator->fails())
+            // Check security schedule time, compare time from date now
+            $dateNow = $this->coreSystem->dateNow();
+            $siteScheduleActive = $this->coreSystem->siteActive();
+            $securityScheduleCheck = SecuritySchedule::whereIn('id', $siteScheduleActive)
+                ->where('id_security_plan', $user->people->security->id)
+                ->with('site_schedule.schedule')
+                ->get();
+
+            // Matched schedule
+            if ($securityScheduleCheck->count() == 1) 
             {
-                $user = $this->authUser();
-                // Check security schedule time, compare time from date now
-                $dateNow = $this->coreSystem->dateNow();
-                $siteScheduleActive = $this->coreSystem->siteActive();
-                $securityScheduleCheck = SecuritySchedule::whereIn('id', $siteScheduleActive)
-                    ->where('id_security_plan', $user->people->security->id)
-                    ->with('site_schedule.schedule')
-                    ->get();
-                
-                // Matched schedule
-                if ($securityScheduleCheck->count() == 1) 
+                // Get checkpoint list
+                $checkpointList = [];
+                $checkpoint = Checkpoint::where('id_site', $securityScheduleCheck[0]->site_schedule->site->id)->get();
+
+                foreach ($checkpoint as $dataCheckpoint) 
                 {
-                    // Get checkpoint list
-                    $checkpointList = [];
-                    $checkpoint = Checkpoint::where('id_site', $securityScheduleCheck[0]->site_schedule->site->id)->get();
-
-                    foreach ($checkpoint as $dataCheckpoint) 
-                    {
-                        $checkpointList[] = $dataCheckpoint->toArray();
-                    }
-
-                    // Check data exists
-                    $report = Report::where('id_security_schedule', $securityScheduleCheck[0]->id)
-                        ->where('id_security_real', $user->people->security->id)
-                        ->where('date', $dateNow['date']->toDateString())
-                        ->where('end', NULL)->get();
-                    
-                    // Data not exists, creating new report 
-                    if ($report->isEmpty()) 
-                    {
-                        $report = new Report;
-                        $report->id_security_schedule = $securityScheduleCheck[0]->id;
-                        $report->id_security_real = $user->people->security->id;
-                        $report->date = $dateNow['date']->toDateString();
-                        $report->start = $dateNow['time'];
-                        $report->save();
-
-                        $data = [
-                            'report' => $report,
-                            'checkpoint' => $checkpointList,
-                        ];
-
-                        return $this->respHandler->success('Patrol has been started, please check this checkpoint.', $data);
-                    } 
-                    // Data exists, show report collection
-                    else
-                    {
-                        $data = [
-                            'report' => $report,
-                            'checkpoint' => $checkpointList,
-                        ];
-
-                        return $this->respHandler->success('Patrol already started, please check this checkpoint.', $data);
-                    }
+                    $checkpointList[] = $dataCheckpoint->toArray();
                 }
-                else
+
+                // Check data exists
+                $report = Report::where('id_security_schedule', $securityScheduleCheck[0]->id)
+                    ->where('id_security_real', $user->people->security->id)
+                    ->where('date', $dateNow['date']->toDateString())
+                    ->where('end', NULL)->get();
+                
+                // Data not exists, creating new report 
+                if ($report->isEmpty()) 
                 {
-                    // todo else, security schedule not found, send request to access app
-                    // MODEL
-                    // - remove id_security_real on reports model
-                    // - added new model called security_request
-                    // -> attribut = id, id_security_schedule, id_security_request, status
-                    // CONTROLLER
-                    // - check active site for security_request
-                    // - insert data to security_request
-                    // - return data to json
+                    $report = new Report;
+                    $report->id_security_schedule = $securityScheduleCheck[0]->id;
+                    $report->id_security_real = $user->people->security->id;
+                    $report->date = $dateNow['date']->toDateString();
+                    $report->start = $dateNow['time'];
+                    $report->save();
 
                     $data = [
-                        // 'id_security_schedule' => // Get security schedule today
-                        'id_security_request' => $request->id_people,
+                        'report' => $report,
+                        'checkpoint' => $checkpointList,
                     ];
 
-                    return $this->respHandler->success('Its not your schedule.', $data);
+                    return $this->respHandler->success('Patrol has been started, please check this checkpoint.', $data);
+                } 
+                // Data exists, show report collection
+                else
+                {
+                    $data = [
+                        'report' => $report,
+                        'checkpoint' => $checkpointList,
+                    ];
+
+                    return $this->respHandler->success('Patrol already started, please check this checkpoint.', $data);
                 }
             }
             else
-                return $this->respHandler->requestError($validator->errors());
+            {
+                // todo else, security schedule not found, send request to access app
+                // MODEL
+                // - remove id_security_real on reports model
+                // - added new model called security_request
+                // -> attribut = id, id_security_schedule, id_security_request, status
+                // CONTROLLER
+                // - check active site for security_request
+                // - insert data to security_request
+                // - return data to json
+
+                $data = [
+                    // 'id_security_schedule' => // Get security schedule today
+                    'id_security_request' => $user->people->security->id,
+                ];
+
+                return $this->respHandler->success('Its not your schedule.', $data);
+            }
         }
         catch(\Exception $e)
         {
@@ -133,7 +128,7 @@ class ReportController extends Controller
             {
                 $dateNow = $this->coreSystem->dateNow();
                 // Check data exists
-                $report = Report::findOrFail($request->id_report);
+                $report = Report::find($request->id_report);
                 
                 // Report exist, stopped patrol
                 if ($report)
@@ -191,10 +186,15 @@ class ReportController extends Controller
             if (! $validator->fails())
             {
                 $user = $this->authUser();
+
+                // Handler id report not found
+                if (! Report::find($request->id_report))
+                    return $this->respHandler->success('Id report not found.');
+
                 // Check data exists
                 $reportDetail = ReportDetail::where('id_report', $request->id_report)
-                    ->where('id_checkpoint', $request->id_checkpoint)->firstOrFail();
-                
+                    ->where('id_checkpoint', $request->id_checkpoint)->first();
+
                 // Send report without creating new report detail
                 if ($reportDetail)
                 {
@@ -203,6 +203,8 @@ class ReportController extends Controller
                     $message->id_report_detail = $reportDetail->id;
                     $message->id_respondent = $user->id;
                     $message->message = $request->message;
+                    $message->lat = $request->lat;
+                    $message->long = $request->long;
                     $message->save();
                 }
                 // Send report with creating new report detail
@@ -221,6 +223,8 @@ class ReportController extends Controller
                     $message->id_report_detail = $reportDetail->id;
                     $message->id_respondent = $user->id;
                     $message->message = $request->message;
+                    $message->lat = $request->lat;
+                    $message->long = $request->long;
                     $message->save();
                 }
 
