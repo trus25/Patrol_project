@@ -63,7 +63,7 @@ class RequestHandler
             return $this->respHandler->success('Id report detail not found.');
         if (! Report::find($request->id_report) && $request->id_report)
             return $this->respHandler->success('Id report not found.');
-        if (! Checkpoint::find($request->id_checkpoint) && $request->id_report)
+        if (! Checkpoint::find($request->id_checkpoint) && $request->id_checkpoint)
             return $this->respHandler->success('Id checkpoint not found.');
         if (! SecuritySchedule::find($request->id_security_schedule) && $request->id_security_schedule)
             return $this->respHandler->success('Id security schedule not found.');

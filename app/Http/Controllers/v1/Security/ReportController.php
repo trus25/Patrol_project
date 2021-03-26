@@ -33,7 +33,7 @@ class ReportController extends Controller
             // Check security schedule time, compare time from date now
             $dateNow = $this->coreSystem->dateNow();
             $siteScheduleActive = $this->coreSystem->siteActive();
-            $securityScheduleCheck = SecuritySchedule::whereIn('id', $siteScheduleActive)
+            $securityScheduleCheck = SecuritySchedule::whereIn('id_site_schedule', $siteScheduleActive)
                 ->where('id_security_plan', $user->people->security->id)
                 ->with('site_schedule.schedule')
                 ->get();
