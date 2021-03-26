@@ -186,11 +186,6 @@ class ReportController extends Controller
             if (! $validator->fails())
             {
                 $user = $this->authUser();
-
-                // Handler id report not found
-                if (! Report::find($request->id_report))
-                    return $this->respHandler->success('Id report not found.');
-
                 // Check data exists
                 $reportDetail = ReportDetail::where('id_report', $request->id_report)
                     ->where('id_checkpoint', $request->id_checkpoint)->first();
@@ -229,6 +224,43 @@ class ReportController extends Controller
                 }
 
                 return $this->respHandler->success('Message already sent.', $message);
+            }
+            else
+                return $this->respHandler->requestError($validator->errors());
+        }
+        catch(\Exception $e)
+        {
+            return $this->respHandler->requestError($e->getMessage());
+        }
+	}
+
+    /**
+     * Get checkpoint report data
+     * GET api/v1/security/report/checkpoint-report
+     * @param id_report
+     * @param id_checkpoint
+     * @return Response
+     **/
+	public function checkpointMessage(Request $request)
+	{
+        try
+        {
+            $validator = Validator::make($request->all(), [
+                'id_report' => 'required',
+                'id_checkpoint' => 'required',
+            ]);
+
+            if (! $validator->fails())
+            {
+                $reportDetail = ReportDetail::where('id_report', $request->id_report)
+                    ->where('id_checkpoint', $request->id_checkpoint)->first();
+
+                if ($reportDetail)
+                {
+                    return $this->respHandler->success('Success get data.', $reportDetail->message);
+                }
+                else
+                    return $this->respHandler->success('Report not found.');
             }
             else
                 return $this->respHandler->requestError($validator->errors());

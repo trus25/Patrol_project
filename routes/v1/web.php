@@ -34,16 +34,11 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'security', 'namespace' => 'Security', 'middleware' => 'auth:api'], function () use ($router) {
         $router->group(['prefix' => 'report'], function () use ($router) {
+            $router->get('/checkpoint-report', ['uses' => 'ReportController@checkpointMessage', 'as' => 'security.report.checkpointMessage']);
             $router->get('/start-patrol', ['uses' => 'ReportController@startPatrol', 'as' => 'security.report.startPatrol']);
             $router->post('/stop-patrol', ['uses' => 'ReportController@stopPatrol', 'as' => 'security.report.stopPatrol']);
             $router->post('/send', ['uses' => 'ReportController@sendReport', 'as' => 'security.report.sendReport']);
-            // $router->post('/store', ['uses' => 'ReportController@storeReport', 'as' => 'security.report.storeReport']);
-            // $router->post('/store/detail', ['uses' => 'ReportController@storeReportDetail', 'as' => 'security.report.storeReportDetail']);
         });
-
-        // $router->group(['prefix' => 'broadcast'], function () use ($router) {
-        //     $router->get('/', ['uses' => 'BroadcastController@index', 'as' => 'security.broadcast.index']);
-        // });
     });
 });
 

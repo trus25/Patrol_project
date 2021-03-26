@@ -84,6 +84,7 @@ $app->routeMiddleware([
 
 $app->middleware([
     Fruitcake\Cors\HandleCors::class,
+    App\Http\Middleware\RequestHandler::class
 ]);
 
 /*
