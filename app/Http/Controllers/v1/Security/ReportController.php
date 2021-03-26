@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\Security;
 use App\Http\Controllers\Controller;
 use App\Models\v1\Report;
 use App\Models\v1\ReportDetail;
+use App\Models\v1\Message;
 use App\Models\v1\Checkpoint;
 use App\Models\v1\SecuritySchedule;
 
@@ -30,11 +31,12 @@ class ReportController extends Controller
 
             if (! $validator->fails())
             {
+                $user = $this->authUser();
                 // Check security schedule time, compare time from date now
                 $dateNow = $this->coreSystem->dateNow();
                 $siteScheduleActive = $this->coreSystem->siteActive();
                 $securityScheduleCheck = SecuritySchedule::whereIn('id', $siteScheduleActive)
-                    ->where('id_security_plan', $request->id_people)
+                    ->where('id_security_plan', $user->people->security->id)
                     ->with('site_schedule.schedule')
                     ->get();
                 
@@ -52,15 +54,16 @@ class ReportController extends Controller
 
                     // Check data exists
                     $report = Report::where('id_security_schedule', $securityScheduleCheck[0]->id)
-                        ->where('id_security_real', $request->id_people)
+                        ->where('id_security_real', $user->people->security->id)
                         ->where('date', $dateNow['date']->toDateString())
                         ->where('end', NULL)->get();
-
+                    
+                    // Data not exists, creating new report 
                     if ($report->isEmpty()) 
                     {
                         $report = new Report;
                         $report->id_security_schedule = $securityScheduleCheck[0]->id;
-                        $report->id_security_real = $request->id_people;
+                        $report->id_security_real = $user->people->security->id;
                         $report->date = $dateNow['date']->toDateString();
                         $report->start = $dateNow['time'];
                         $report->save();
@@ -72,6 +75,7 @@ class ReportController extends Controller
 
                         return $this->respHandler->success('Patrol has been started, please check this checkpoint.', $data);
                     } 
+                    // Data exists, show report collection
                     else
                     {
                         $data = [
@@ -129,10 +133,12 @@ class ReportController extends Controller
             {
                 $dateNow = $this->coreSystem->dateNow();
                 // Check data exists
-                $report = Report::find($request->id_report);
+                $report = Report::findOrFail($request->id_report);
                 
+                // Report exist, stopped patrol
                 if ($report)
                 {
+                    // Updated stopped time for patrol
                     if (! $report->end)
                     {
                         $report->end = $dateNow['time'];
@@ -149,11 +155,7 @@ class ReportController extends Controller
                 }
                 else
                 {
-                    $data = [
-                        'report' => $report,
-                    ];
-
-                    return $this->respHandler->success('Data not exists.', $data);
+                    return $this->respHandler->success('Data not exists.');
                 }
             }
             else
@@ -177,17 +179,52 @@ class ReportController extends Controller
 	{
         try
         {
-            dd($request->post());
             $validator = Validator::make($request->post(), [
                 'id_report' => 'required',
                 'id_checkpoint' => 'required',
+                'type' => 'required|in:Video,Text,Audio,Image',
                 'message' => 'required',
+                'lat' => 'required',
+                'long' => 'required',
             ]);
 
             if (! $validator->fails())
             {
-                // todo, insert to report_detail and messages
-                // check report_detail first if exist, just  insert
+                $user = $this->authUser();
+                // Check data exists
+                $reportDetail = ReportDetail::where('id_report', $request->id_report)
+                    ->where('id_checkpoint', $request->id_checkpoint)->firstOrFail();
+                
+                // Send report without creating new report detail
+                if ($reportDetail)
+                {
+                    $message = new Message;
+                    $message->id_report = $request->id_report;
+                    $message->id_report_detail = $reportDetail->id;
+                    $message->id_respondent = $user->id;
+                    $message->message = $request->message;
+                    $message->save();
+                }
+                // Send report with creating new report detail
+                else
+                {
+                    $dateNow = $this->coreSystem->dateNow();
+
+                    $reportDetail = new ReportDetail;
+                    $reportDetail->id_report = $request->id_report;
+                    $reportDetail->id_checkpoint = $request->id_checkpoint;
+                    $reportDetail->time = $dateNow['date'];
+                    $reportDetail->save();
+
+                    $message = new Message;
+                    $message->id_report = $request->id_report;
+                    $message->id_report_detail = $reportDetail->id;
+                    $message->id_respondent = $user->id;
+                    $message->message = $request->message;
+                    $message->save();
+                }
+
+                return $this->respHandler->success('Message already sent.', $message);
             }
             else
                 return $this->respHandler->requestError($validator->errors());

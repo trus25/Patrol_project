@@ -22,6 +22,8 @@ class CreateMessagesTable extends Migration
             $table->enum('report_type',['R','S'])->default('R'); // R = Reports, S = SOS
             $table->enum('sos_to',['Owner','Client'])->nullable();
             $table->enum('message_type',['Video','Text','Audio','Image'])->default('Text');
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
         });

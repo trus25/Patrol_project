@@ -18,8 +18,6 @@ class CreateReportDetailsTable extends Migration
             $table->bigInteger('id_report')->unsigned();
             $table->bigInteger('id_checkpoint')->unsigned();
             $table->datetime('time')->nullable();
-            $table->string('lat')->nullable();
-            $table->string('long')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
         });
