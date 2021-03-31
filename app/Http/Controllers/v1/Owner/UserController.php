@@ -116,7 +116,6 @@ class UserController extends Controller
         {
             $validator = Validator::make($request->post(), [
                 'username' => 'required',
-                'password' => 'required',
                 'email' => 'required',
             ]);
 
@@ -124,7 +123,7 @@ class UserController extends Controller
             {
                 $new_user = User::find($id);
                 $new_user->username = $request->username;
-                $new_user->password = Hash::make($request->Password);
+                $new_user->password = $request->password ? userHash::make($request->password) : $new_user->password;
                 $new_user->email = $request->email;
                 $new_user->save();
 
