@@ -81,7 +81,7 @@ class UserController extends Controller
                 $new_user = new User();
                 $new_user->id_people = $request->id_people ? $request->id_people : $new_people->id;
                 $new_user->username = $request->username;
-                $new_user->password = $request->password;
+                $new_user->password = Hash::make($request->password);
                 $new_user->email = $request->email;
                 $new_user->save();
 
@@ -123,7 +123,7 @@ class UserController extends Controller
             {
                 $new_user = User::find($id);
                 $new_user->username = $request->username;
-                $new_user->password = $request->password ? userHash::make($request->password) : $new_user->password;
+                $new_user->password = $request->password ? Hash::make($request->password) : $new_user->password;
                 $new_user->email = $request->email;
                 $new_user->save();
 
