@@ -7,6 +7,7 @@ use App\Models\v1\People;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class PeopleController extends Controller
 {
@@ -62,6 +63,7 @@ class PeopleController extends Controller
                 $new_people->phone_number = $request->phone_number;
                 $new_people->age = $request->age;
                 $new_people->sex = $request->sex;
+                $new_people->birthdate = Carbon::parse($request->birthdate);
                 $new_people->save();
 
                 return $this->respHandler->success('People has been saved.', $new_people);
@@ -108,6 +110,7 @@ class PeopleController extends Controller
                 $new_people->phone_number = $request->phone_number;
                 $new_people->age = $request->age;
                 $new_people->sex = $request->sex;
+                $new_people->birthdate = Carbon::parse($request->birthdate);
                 $new_people->save();
 
                 return $this->respHandler->success('People has been updated.', $new_people);
