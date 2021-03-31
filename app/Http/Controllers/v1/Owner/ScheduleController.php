@@ -8,6 +8,7 @@ use App\Models\v1\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -53,8 +54,8 @@ class ScheduleController extends Controller
             {
                 $schedule = new Schedule();
                 $schedule->day = $request->day;
-                $schedule->start = $request->start;
-                $schedule->end = $request->end;
+                $schedule->start = Carbon::parse($request->start);
+                $schedule->end = Carbon::parse($request->end);
                 $schedule->save();
 
                 return $this->respHandler->success('Schedule has been saved.', $schedule);
@@ -91,8 +92,8 @@ class ScheduleController extends Controller
             {
                 $schedule = Schedule::find($id);
                 $schedule->day = $request->day;
-                $schedule->start = $request->start;
-                $schedule->end = $request->end;
+                $schedule->start = Carbon::parse($request->start);
+                $schedule->end = Carbon::parse($request->end);
                 $schedule->save();
 
                 return $this->respHandler->success('Schedule has been updated.', $schedule);
