@@ -20,7 +20,26 @@ class SecurityScheduleController extends Controller
 	{
         try 
         {
-            $security_schedule = $id ? SecuritySchedule::with('security_plan.people')->where('id_site_schedule', $id)->get() : SecuritySchedule::get();
+            $security_schedule = $id ? SecuritySchedule::find($id) : SecuritySchedule::get();
+            return $this->respHandler->success('Success get data.', $security_schedule);
+        } 
+        catch(\Exception $e)
+        {
+            return $this->respHandler->requestError($e->getMessage());
+        }
+	}
+    
+    /**
+     * Get Security Schedule data By Id Site Schedile
+     * GET api/v1/owner/security-schedule/site/
+     * @param id
+     * @return Response
+     **/
+	public function indexBySiteSchedule($id)
+	{
+        try 
+        {
+            $security_schedule = SecuritySchedule::with('security_plan.people')->where('id_site_schedule', $id)->get();
 
             return $this->respHandler->success('Success get data.', $security_schedule);
         } 

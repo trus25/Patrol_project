@@ -48,6 +48,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->group(['prefix' => 'security-schedule'], function () use ($router) {
             $router->get('/', ['uses' => 'SecurityScheduleController@index', 'as' => 'owner.security-schedule.index']);
             $router->get('/{id}', ['uses' => 'SecurityScheduleController@index', 'as' => 'owner.security-schedule.index']);
+            $router->get('/site/{id}', ['uses' => 'SecurityScheduleController@indexBySiteSchedule', 'as' => 'owner.security-schedule.indexBySiteSchedule']);
             $router->post('/store', ['uses' => 'SecurityScheduleController@storeSecuritySchedule', 'as' => 'owner.security-schedule.storeSecuritySchedule']);
             $router->put('/update/{id}', ['uses' => 'SecurityScheduleController@updateSecuritySchedule', 'as' => 'owner.security-schedule.updateSecuritySchedule']);
             $router->delete('/delete/{id}', ['uses' => 'SecurityScheduleController@deleteSecuritySchedule', 'as' => 'owner.security-schedule.deleteSecuritySchedule']);
