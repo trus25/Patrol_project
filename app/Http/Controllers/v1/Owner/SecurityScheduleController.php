@@ -20,7 +20,7 @@ class SecurityScheduleController extends Controller
 	{
         try 
         {
-            $security_schedule = $id ? SecuritySchedule::find($id) : SecuritySchedule::get();
+            $security_schedule = $id ? SecuritySchedule::with('security_plan.people')->where('id_site_schedule', $id) : SecuritySchedule::get();
 
             return $this->respHandler->success('Success get data.', $security_schedule);
         } 
