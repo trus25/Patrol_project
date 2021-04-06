@@ -41,7 +41,7 @@ class SiteScheduleController extends Controller
 	{
         try
         {
-            $site_schedule = SiteSchedule::where('id_site', $id)->get();
+            $site_schedule = SiteSchedule::with('site', 'schedule')->where('id_site', $id)->get();
 
             return $this->respHandler->success('Success get data.', $site_schedule);
         }
