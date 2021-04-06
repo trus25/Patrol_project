@@ -308,7 +308,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/owner/security-schedule/1",
+											"raw": "{{BASE_URL}}/api/v1/owner/security-schedule/2",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -317,7 +317,29 @@
 												"v1",
 												"owner",
 												"security-schedule",
-												"1"
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Security Schedule by Id Site Schedule",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/owner/security-schedule/site/7",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"owner",
+												"security-schedule",
+												"site",
+												"7"
 											]
 										}
 									},
@@ -559,7 +581,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/owner/user/schedule/delete/1",
+											"raw": "{{BASE_URL}}/api/v1/owner/user/delete/1",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -568,7 +590,6 @@
 												"v1",
 												"owner",
 												"user",
-												"schedule",
 												"delete",
 												"1"
 											]
@@ -2385,7 +2406,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZXBhdHJvbC5uZXJhLXNlYS5jb21cL2FwaVwvdjFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjE2NzY5Nzk4LCJuYmYiOjE2MTY3Njk3OTgsImp0aSI6ImVDWlJsMFB4eTk5TmtKWHIiLCJzdWIiOjIsInBydiI6ImE5NTk2NzhlYjczZDc2ODYwYWVlYWY5ODlkNTU2MWUwNzNlMWU3OGUifQ.6asb9ebChKB2YZi9pTE-iR6Z73XueXh0u4FN7_33-dg",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZXBhdHJvbC5uZXJhLXNlYS5jb21cL2FwaVwvdjFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjE3MDc4OTY4LCJuYmYiOjE2MTcwNzg5NjgsImp0aSI6Im9rdTlpNzhuTllWTjFNdjMiLCJzdWIiOjIsInBydiI6ImE5NTk2NzhlYjczZDc2ODYwYWVlYWY5ODlkNTU2MWUwNzNlMWU3OGUifQ.yMc0Nhc8cRUafffvrq648n2mmaVxYy1D7wldsjA4pdk",
 				"type": "string"
 			}
 		]
