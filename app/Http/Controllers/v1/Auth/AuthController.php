@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\v1\People;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +36,16 @@ class AuthController extends Controller
                     return $this->respHandler->requestError('Unauthorized.');
                 }
                 
-                return $this->respHandler->success('Success get token bearer.', ['token' => $token]);
+                $data = [
+                    'token' => $token, 
+                    'profile' => (object) [
+                        'name' => People::find($this->authUser()->id)->name,
+                        'address' => People::find($this->authUser()->id)->address,
+                        'phone_number' => People::find($this->authUser()->id)->phone_number
+                    ]
+                ];
+
+                return $this->respHandler->success('Success get token bearer.', $data);
             }
             else
                 return $this->respHandler->requestError($validator->errors());

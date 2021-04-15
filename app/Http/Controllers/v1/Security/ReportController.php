@@ -41,23 +41,14 @@ class ReportController extends Controller
             // Matched schedule
             if ($securityScheduleCheck->count() == 1) 
             {
-                // Get checkpoint list
-                $checkpointList = [];
-                $checkpoint = Checkpoint::where('id_site', $securityScheduleCheck[0]->site_schedule->site->id)->get();
-
-                foreach ($checkpoint as $dataCheckpoint) 
-                {
-                    $checkpointList[] = $dataCheckpoint->toArray();
-                }
-
                 // Check data exists
                 $report = Report::where('id_security_schedule', $securityScheduleCheck[0]->id)
                     ->where('id_security_real', $user->people->security->id)
                     ->where('date', $dateNow['date']->toDateString())
-                    ->where('end', NULL)->get();
+                    ->where('end', NULL)->first();
                 
                 // Data not exists, creating new report 
-                if ($report->isEmpty()) 
+                if (! $report) 
                 {
                     $report = new Report;
                     $report->id_security_schedule = $securityScheduleCheck[0]->id;
@@ -67,21 +58,23 @@ class ReportController extends Controller
                     $report->save();
 
                     $data = [
-                        'report' => $report,
-                        'checkpoint' => $checkpointList,
+                        'status' => 1,
+                        'id_site' => $securityScheduleCheck[0]->site_schedule->site->id,
+                        'report' => $report
                     ];
 
-                    return $this->respHandler->success('Patrol has been started, please check this checkpoint.', $data);
+                    return $this->respHandler->success('Patrol has been started.', $data);
                 } 
                 // Data exists, show report collection
                 else
                 {
                     $data = [
+                        'status' => 1,
+                        'id_site' => $securityScheduleCheck[0]->site_schedule->site->id,
                         'report' => $report,
-                        'checkpoint' => $checkpointList,
                     ];
 
-                    return $this->respHandler->success('Patrol already started, please check this checkpoint.', $data);
+                    return $this->respHandler->success('Patrol already started.', $data);
                 }
             }
             else
@@ -98,6 +91,8 @@ class ReportController extends Controller
 
                 $data = [
                     // 'id_security_schedule' => // Get security schedule today
+                    'message' => 'Work in Progress!',
+                    'status_request' => 1,
                     'id_security_request' => $user->people->security->id,
                 ];
 
@@ -163,8 +158,45 @@ class ReportController extends Controller
 	}
 
     /**
+     * Get checkpoint list
+     * GET api/v1/security/report/checkpoint-list
+     * @param id_report
+     * @param id_checkpoint
+     * @return Response
+     **/
+	public function checkpointList(Request $request)
+	{
+        try
+        {
+            $validator = Validator::make($request->all(), [
+                'id_site' => 'required',
+            ]);
+
+            if (! $validator->fails())
+            {
+                // Get checkpoint list
+                $checkpointList = [];
+                $checkpoint = Checkpoint::where('id_site', $request->id_site)->get();
+
+                foreach ($checkpoint as $dataCheckpoint) 
+                {
+                    $checkpointList[] = $dataCheckpoint->toArray();
+                }
+
+                return $this->respHandler->success('Success get data.', ['checkpoint' => $checkpointList]);
+            }
+            else
+                return $this->respHandler->requestError($validator->errors());
+        }
+        catch(\Exception $e)
+        {
+            return $this->respHandler->requestError($e->getMessage());
+        }
+	}
+
+    /**
      * Send report message
-     * POST api/v1/security/report/send/
+     * POST api/v1/security/report/send
      * @param id_report
      * @param id_checkpoint
      * @param message

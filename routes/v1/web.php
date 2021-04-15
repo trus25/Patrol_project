@@ -33,8 +33,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 // API v1 Security
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'security', 'namespace' => 'Security', 'middleware' => 'auth:api'], function () use ($router) {
+        $router->get('/dashboard', ['uses' => 'DashboardAppController@index', 'as' => 'security.dashboardApp.index']);
         $router->group(['prefix' => 'report'], function () use ($router) {
             $router->get('/checkpoint-report', ['uses' => 'ReportController@checkpointMessage', 'as' => 'security.report.checkpointMessage']);
+            $router->get('/checkpoint-list', ['uses' => 'ReportController@checkpointList', 'as' => 'security.report.checkpointList']);
             $router->get('/start-patrol', ['uses' => 'ReportController@startPatrol', 'as' => 'security.report.startPatrol']);
             $router->post('/stop-patrol', ['uses' => 'ReportController@stopPatrol', 'as' => 'security.report.stopPatrol']);
             $router->post('/send', ['uses' => 'ReportController@sendReport', 'as' => 'security.report.sendReport']);
