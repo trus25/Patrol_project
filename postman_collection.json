@@ -1912,6 +1912,72 @@
 							]
 						}
 					]
+				},
+				{
+					"name": "Client",
+					"item": [
+						{
+							"name": "Report",
+							"item": [
+								{
+									"name": "Get Report",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/client/report",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"client",
+												"report"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report Detail By Id Report",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/client/report/detail/7",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"client",
+												"report",
+												"detail",
+												"7"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
 				}
 			]
 		},
@@ -2454,6 +2520,72 @@
 								}
 							},
 							"response": []
+						}
+					]
+				},
+				{
+					"name": "Client",
+					"item": [
+						{
+							"name": "Report",
+							"item": [
+								{
+									"name": "Get Report",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report",
+											"host": [
+												"{{BASE_URL_LOKAL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"client",
+												"report"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report Detail By Id Report",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report/detail/14",
+											"host": [
+												"{{BASE_URL_LOKAL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"client",
+												"report",
+												"detail",
+												"14"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				}
