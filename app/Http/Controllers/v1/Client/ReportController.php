@@ -26,7 +26,7 @@ class ReportController extends Controller
             $reportValue = [];
             foreach($report as $reportCollection)
             {
-                $reportValue = [
+                $data[] = [
                     'id' => $reportCollection->id,
                     'site_name' => $reportCollection->security_schedule->site_schedule->site->name,
                     'security' => $reportCollection->security_schedule->security_plan->people->name,
@@ -35,10 +35,6 @@ class ReportController extends Controller
                     'end' => $reportCollection->end,
                 ];
             }
-
-            $data = [
-                'report' => $reportValue,
-            ];
 
             return $this->respHandler->success('Success get data.', $data);
         }
