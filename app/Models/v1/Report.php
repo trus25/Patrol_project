@@ -12,7 +12,7 @@ class Report extends Model
 
     public function security_schedule()
     {
-    	return $this->belongsTo('App\Models\v1\SiteSchedule', 'id_security_schedule', 'id');
+    	return $this->belongsTo('App\Models\v1\SecuritySchedule', 'id_security_schedule', 'id');
     }
 
     public function security()

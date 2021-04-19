@@ -143,7 +143,10 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 
 // API v1 Client
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
-    $router->group(['prefix' => 'owner', 'namespace' => 'Client', 'middleware' => 'auth:api'], function () use ($router) {
-        // Code start from here
+    $router->group(['prefix' => 'client', 'namespace' => 'Client', 'middleware' => 'auth:api'], function () use ($router) {
+        $router->group(['prefix' => 'report'], function () use ($router) {
+            $router->get('/', ['uses' => 'ReportController@index', 'as' => 'client.report.index']);
+            $router->get('/detail/{id}', ['uses' => 'ReportController@reportDetail', 'as' => 'client.report.reportDetail']);
+        });
     });
 });
