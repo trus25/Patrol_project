@@ -23,7 +23,7 @@ class ReportController extends Controller
         {
             $report = Report::with('security_schedule.site_schedule.site', 'security_schedule.site_schedule.schedule', 'security_schedule.security_plan.people')->get();
 
-            $reportValue = [];
+            $data = [];
             foreach($report as $reportCollection)
             {
                 $data[] = [
