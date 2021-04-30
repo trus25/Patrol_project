@@ -58,7 +58,28 @@ class ReportController extends Controller
 
             if ($reportDetail)
             {
-                return $this->respHandler->success('Success get data.', $reportDetail);
+                $data = [];
+                foreach($reportDetail as $detailCollection)
+                {
+                    $message = [];
+                    foreach($detailCollection->message as $messageCollection)
+                    {
+                        $message[] = [
+                            'respondent_name' => $messageCollection->user->people->name,
+                            'content' => $messageCollection->message,
+                            'created_at' => $messageCollection->created_at,
+                        ];
+                    }
+
+                    $data[] = [
+                        'id' => $detailCollection->id,
+                        'id_report' => $detailCollection->id_report,
+                        'id_checkpoint' => $detailCollection->id_checkpoint,
+                        'checkpoint_name' => $detailCollection->checkpoint->name,
+                        'message' => $message,
+                    ];
+                }
+                return $this->respHandler->success('Success get data.', $data);
             }
             else
                 return $this->respHandler->success('Report detail not found.');
