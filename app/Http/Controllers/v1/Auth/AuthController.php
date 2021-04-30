@@ -39,9 +39,9 @@ class AuthController extends Controller
                 $data = [
                     'token' => $token, 
                     'profile' => (object) [
-                        'name' => People::find($this->authUser()->id)->name,
-                        'address' => People::find($this->authUser()->id)->address,
-                        'phone_number' => People::find($this->authUser()->id)->phone_number
+                        'name' => People::find($this->authUser()->id_people)->name,
+                        'address' => People::find($this->authUser()->id_people)->address,
+                        'phone_number' => People::find($this->authUser()->id_people)->phone_number
                     ]
                 ];
 
