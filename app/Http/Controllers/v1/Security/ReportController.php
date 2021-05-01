@@ -18,6 +18,9 @@ class ReportController extends Controller
     /**
      * Main check status patrol, start or continue
      * GET api/v1/security/report/start-patrol/
+     * status_request 0 Patrol Started
+     * status_request 1 Patrol Schedule not Found
+     * status_request 2 Patrol Continue
      * @param id_people
      * @return Response
      **/
@@ -58,7 +61,7 @@ class ReportController extends Controller
                     $report->save();
 
                     $data = [
-                        'status' => 1,
+                        'status_request' => 0,
                         'id_site' => $securityScheduleCheck[0]->site_schedule->site->id,
                         'report' => $report
                     ];
@@ -69,7 +72,7 @@ class ReportController extends Controller
                 else
                 {
                     $data = [
-                        'status' => 1,
+                        'status_request' => 2,
                         'id_site' => $securityScheduleCheck[0]->site_schedule->site->id,
                         'report' => $report,
                     ];
@@ -289,7 +292,20 @@ class ReportController extends Controller
 
                 if ($reportDetail)
                 {
-                    return $this->respHandler->success('Success get data.', $reportDetail->message);
+                    $data = [];
+                    foreach($reportDetail->message as $messageCollection)
+                    {
+                        $dateConverted = Carbon::parse($messageCollection->created_at)->locale('id');
+                        $dateConverted->settings(['formatFunction' => 'translatedFormat']);
+                        $data[] = [
+                            'respondent_name' => $messageCollection->user->people->name,
+                            'message_type' => $messageCollection->message_type,
+                            'message' => $messageCollection->message,
+                            'created_at' => $dateConverted->format('d F Y | H:m'),
+                        ];
+                    }
+
+                    return $this->respHandler->success('Success get data.', $data);
                 }
                 else
                     return $this->respHandler->success('Report not found.');
