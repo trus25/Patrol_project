@@ -17,11 +17,21 @@ class ReportController extends Controller
      * GET api/v1/client/report
      * @return Response
      **/
-	public function index()
+	public function index(Request $request)
 	{
         try
         {
-            $report = Report::with('security_schedule.site_schedule.site', 'security_schedule.site_schedule.schedule', 'security_schedule.security_plan.people')->get();
+            /** 
+             * Filter status $request->filter
+             * default = Watching Patrol 
+             * 1 = Completed Patrol
+             **/ 
+            $report = Report::with('security_schedule.site_schedule.site', 'security_schedule.site_schedule.schedule', 'security_schedule.security_plan.people');
+            if ($request->filter == 1) 
+                $report = $report->where('end', '!=', NULL);
+            else
+                $report = $report->where('end', NULL);
+            $report = $report->orderBy('created_at', 'DESC')->get();
 
             $data = [];
             foreach($report as $reportCollection)
@@ -54,13 +64,14 @@ class ReportController extends Controller
 	{
         try
         {
-            $reportDetail = ReportDetail::where('id_report', $id)->with('message')->get();
+            $reportDetail = ReportDetail::where('id_report', $id)->with('message', 'report.security_schedule.site_schedule.site.checkpoint')->get();
 
             if ($reportDetail)
             {
-                $data = [];
+                $report = [];
                 foreach($reportDetail as $detailCollection)
                 {
+                    // Get message list
                     $message = [];
                     foreach($detailCollection->message as $messageCollection)
                     {
@@ -71,7 +82,7 @@ class ReportController extends Controller
                         ];
                     }
 
-                    $data[] = [
+                    $report[] = [
                         'id' => $detailCollection->id,
                         'id_report' => $detailCollection->id_report,
                         'id_checkpoint' => $detailCollection->id_checkpoint,
@@ -79,6 +90,32 @@ class ReportController extends Controller
                         'message' => $message,
                     ];
                 }
+
+                // Get checkpoint list
+                $data = [];
+                $checkpointList_Check = [];
+                foreach($detailCollection->report->security_schedule->site_schedule->site->checkpoint as $checkpointList)
+                {
+                    // Return all to data
+                    foreach($report as $reportValue)
+                    {
+                        if ($reportValue['id_checkpoint'] == $checkpointList->id)
+                        {
+                            $data[] = $reportValue;
+                            $checkpointList_Check[] = $reportValue['id_checkpoint'];
+                        }
+                    }
+                    
+                    // Push empty checkpoint to data
+                    if (! in_array($checkpointList->id, $checkpointList_Check))
+                    {
+                        $data[] = [
+                            'id' => $checkpointList->id,
+                            'checkpoint_name' => $checkpointList->name,
+                        ];
+                    }
+                }
+
                 return $this->respHandler->success('Success get data.', $data);
             }
             else
