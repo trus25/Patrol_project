@@ -66,60 +66,56 @@ class ReportController extends Controller
         {
             $reportDetail = ReportDetail::where('id_report', $id)->with('message', 'report.security_schedule.site_schedule.site.checkpoint')->get();
 
-            if ($reportDetail)
+            $report = [];
+            foreach($reportDetail as $detailCollection)
             {
-                $report = [];
-                foreach($reportDetail as $detailCollection)
+                // Get message list
+                $message = [];
+                foreach($detailCollection->message as $messageCollection)
                 {
-                    // Get message list
-                    $message = [];
-                    foreach($detailCollection->message as $messageCollection)
-                    {
-                        $message[] = [
-                            'respondent_name' => $messageCollection->user->people->name,
-                            'content' => $messageCollection->message,
-                            'created_at' => $messageCollection->created_at,
-                        ];
-                    }
-
-                    $report[] = [
-                        'id' => $detailCollection->id,
-                        'id_report' => $detailCollection->id_report,
-                        'id_checkpoint' => $detailCollection->id_checkpoint,
-                        'checkpoint_name' => $detailCollection->checkpoint->name,
-                        'message' => $message,
+                    $message[] = [
+                        'respondent_name' => $messageCollection->user->people->name,
+                        'content' => $messageCollection->message,
+                        'created_at' => $messageCollection->created_at,
                     ];
                 }
 
-                // Get checkpoint list
-                $data = [];
-                $checkpointList_Check = [];
-                foreach($detailCollection->report->security_schedule->site_schedule->site->checkpoint as $checkpointList)
+                $report[] = [
+                    'id' => $detailCollection->id,
+                    'id_report' => $detailCollection->id_report,
+                    'id_checkpoint' => $detailCollection->id_checkpoint,
+                    'checkpoint_name' => $detailCollection->checkpoint->name,
+                    'message' => $message,
+                ];
+            }
+
+            // Get checkpoint list
+            $data = [];
+            $checkpointList_Check = [];
+            $checkpoint = Report::find($id);
+            foreach($checkpoint->security_schedule->site_schedule->site->checkpoint as $checkpointList)
+            {
+                // Return all to data
+                foreach($report as $reportValue)
                 {
-                    // Return all to data
-                    foreach($report as $reportValue)
+                    if ($reportValue['id_checkpoint'] == $checkpointList->id)
                     {
-                        if ($reportValue['id_checkpoint'] == $checkpointList->id)
-                        {
-                            $data[] = $reportValue;
-                            $checkpointList_Check[] = $reportValue['id_checkpoint'];
-                        }
-                    }
-                    
-                    // Push empty checkpoint to data
-                    if (! in_array($checkpointList->id, $checkpointList_Check))
-                    {
-                        $data[] = [
-                            'id' => $checkpointList->id,
-                            'checkpoint_name' => $checkpointList->name,
-                        ];
+                        $data[] = $reportValue;
+                        $checkpointList_Check[] = $reportValue['id_checkpoint'];
                     }
                 }
-
-                return $this->respHandler->success('Success get data.', $data);
+                
+                // Push empty checkpoint to data
+                if (! in_array($checkpointList->id, $checkpointList_Check))
+                {
+                    $data[] = [
+                        'id' => $checkpointList->id,
+                        'checkpoint_name' => $checkpointList->name,
+                    ];
+                }
             }
-            else
-                return $this->respHandler->success('Report detail not found.');
+
+            return $this->respHandler->success('Success get data.', $data);
         }
         catch(\Exception $e)
         {
