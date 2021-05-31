@@ -5,10 +5,12 @@ namespace App\Http\Controllers\v1\Client;
 use App\Http\Controllers\Controller;
 use App\Models\v1\Report;
 use App\Models\v1\ReportDetail;
+use App\Models\v1\Message;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
@@ -43,6 +45,44 @@ class ReportController extends Controller
                     'date' => $reportCollection->date,
                     'start' => $reportCollection->start,
                     'end' => $reportCollection->end,
+                ];
+            }
+
+            return $this->respHandler->success('Success get data.', $data);
+        }
+        catch(\Exception $e)
+        {
+            return $this->respHandler->requestError($e->getMessage());
+        }
+	}
+
+    /**
+     * Get latest report list
+     * GET api/v1/client/report/latest
+     * @return Response
+     **/
+	public function indexLatest()
+	{
+        try
+        {
+            $message = Message::with('report_detail.checkpoint', 'report.security_schedule.site_schedule.site', 'report.security_schedule.site_schedule.schedule', 'report.security_schedule.security_plan.people');
+            $message = $message->orderBy('created_at', 'DESC')->get();
+
+            $data = [];
+            foreach($message as $messageCollection)
+            {
+                $data[] = [
+                    'id' => $messageCollection->id,
+                    'id_report' => $messageCollection->report->id,
+                    'id_checkpoint' => $messageCollection->report_detail->checkpoint->id,
+                    'site_name' => $messageCollection->report->security_schedule->site_schedule->site->name,
+                    'checkpoint' => $messageCollection->report_detail->checkpoint->name,
+                    'security' => $messageCollection->report->security_schedule->security_plan->people->name,
+                    'message' => Str::limit($messageCollection->message, 25),
+                    'created_at' => Carbon::parse($messageCollection->created_at)->toTimeString(),
+                    'date' => $messageCollection->report->date,
+                    'start' => $messageCollection->report->start,
+                    'end' => $messageCollection->report->end,
                 ];
             }
 

@@ -1941,6 +1941,50 @@
 												"v1",
 												"client",
 												"report"
+											],
+											"query": [
+												{
+													"key": "filter",
+													"value": "1",
+													"description": "1 = Completed Patrol, Default = Watching Patrol",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report Latest",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/client/report/latest",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"client",
+												"report",
+												"latest"
+											],
+											"query": [
+												{
+													"key": "filter",
+													"value": "1",
+													"description": "1 = Completed Patrol, Default = Watching Patrol",
+													"disabled": true
+												}
 											]
 										}
 									},
@@ -1959,7 +2003,7 @@
 											"urlencoded": []
 										},
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/client/report/detail/7",
+											"raw": "{{BASE_URL}}/api/v1/client/report/detail/1",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -1969,7 +2013,7 @@
 												"client",
 												"report",
 												"detail",
-												"7"
+												"1"
 											]
 										}
 									},
@@ -2040,7 +2084,7 @@
 									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/security/report/checkpoint-list?id_site=21",
+									"raw": "{{BASE_URL}}/api/v1/security/report/checkpoint-list?id_site=1",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -2054,7 +2098,7 @@
 									"query": [
 										{
 											"key": "id_site",
-											"value": "21",
+											"value": "1",
 											"description": "Required didapat dari response pada Start Patrol"
 										}
 									]
@@ -2350,7 +2394,7 @@
 											"urlencoded": []
 										},
 										"url": {
-											"raw": "{{BASE_URL_LOKAL}}/api/v1/security/report/checkpoint-report?id_report=14&id_checkpoint=1",
+											"raw": "{{BASE_URL_LOKAL}}/api/v1/security/report/checkpoint-report?id_report=1&id_checkpoint=1",
 											"host": [
 												"{{BASE_URL_LOKAL}}"
 											],
@@ -2364,7 +2408,7 @@
 											"query": [
 												{
 													"key": "id_report",
-													"value": "14",
+													"value": "1",
 													"description": "Required didapat dari response pada Start Patrol"
 												},
 												{
@@ -2542,7 +2586,7 @@
 											"urlencoded": []
 										},
 										"url": {
-											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report",
+											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report/latest",
 											"host": [
 												"{{BASE_URL_LOKAL}}"
 											],
@@ -2550,7 +2594,8 @@
 												"api",
 												"v1",
 												"client",
-												"report"
+												"report",
+												"latest"
 											]
 										}
 									},
@@ -2569,7 +2614,7 @@
 											"urlencoded": []
 										},
 										"url": {
-											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report/detail/14",
+											"raw": "{{BASE_URL_LOKAL}}/api/v1/client/report/detail/1",
 											"host": [
 												"{{BASE_URL_LOKAL}}"
 											],
@@ -2579,7 +2624,7 @@
 												"client",
 												"report",
 												"detail",
-												"14"
+												"1"
 											]
 										}
 									},
@@ -2595,7 +2640,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL2xhcmF2ZWxcL3BhdHJvbF9wcm9qZWN0LWFwaVwvcGF0cm9sX3Byb2plY3RcL3B1YmxpY1wvYXBpXC92MVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MTY3NjM0NDIsIm5iZiI6MTYxNjc2MzQ0MiwianRpIjoicVIxR2VLenl1aXl1VzdGZSIsInN1YiI6NCwicHJ2IjoiYTk1OTY3OGViNzNkNzY4NjBhZWVhZjk4OWQ1NTYxZTA3M2UxZTc4ZSJ9.4lIIqHcdUMKrM2AhDHXD_r-DZzw0wn-iJz7zqGwt1qY",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3RcL2xhcmF2ZWxcL3BhdHJvbF9wcm9qZWN0LWFwaVwvcGF0cm9sX3Byb2plY3RcL3B1YmxpY1wvYXBpXC92MVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MTk3NzIyNDUsIm5iZiI6MTYxOTc3MjI0NSwianRpIjoia1RneUROR0RQVXpXYTJvUyIsInN1YiI6NCwicHJ2IjoiYTk1OTY3OGViNzNkNzY4NjBhZWVhZjk4OWQ1NTYxZTA3M2UxZTc4ZSJ9.LwsdvvJoMuRtoh15Y9C-Jb9KlUxnim5MJg9ZJgcOh70",
 						"type": "string"
 					}
 				]
@@ -2627,7 +2672,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZXBhdHJvbC5uZXJhLXNlYS5jb21cL2FwaVwvdjFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjE4Mzc0OTExLCJuYmYiOjE2MTgzNzQ5MTEsImp0aSI6Ilc4TVJXY0FNNHVYdlNzWHgiLCJzdWIiOjIsInBydiI6ImE5NTk2NzhlYjczZDc2ODYwYWVlYWY5ODlkNTU2MWUwNzNlMWU3OGUifQ.cFXg2Nu5UVZoFt0cYLS0Le5EbhUWwwflmMTGSvsYQfY",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLWVwYXRyb2wuZGVlcG51c2EuY29tXC9cL2FwaVwvdjFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjE5NzY0Njg1LCJuYmYiOjE2MTk3NjQ2ODUsImp0aSI6IlcyUmp4MWs2cjRHU0YzYUsiLCJzdWIiOjEsInBydiI6ImE5NTk2NzhlYjczZDc2ODYwYWVlYWY5ODlkNTU2MWUwNzNlMWU3OGUifQ.tHnMdZF9549VGoSN8BgQ0EKuhp1odEcI5RnrbPb9FtY",
 				"type": "string"
 			}
 		]

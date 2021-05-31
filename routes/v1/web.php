@@ -146,6 +146,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'client', 'namespace' => 'Client', 'middleware' => 'auth:api'], function () use ($router) {
         $router->group(['prefix' => 'report'], function () use ($router) {
             $router->get('/', ['uses' => 'ReportController@index', 'as' => 'client.report.index']);
+            $router->get('/latest', ['uses' => 'ReportController@indexLatest', 'as' => 'client.report.indexLatest']);
             $router->get('/detail/{id}', ['uses' => 'ReportController@reportDetail', 'as' => 'client.report.reportDetail']);
         });
     });
