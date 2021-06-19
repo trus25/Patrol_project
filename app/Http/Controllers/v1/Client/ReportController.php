@@ -68,6 +68,9 @@ class ReportController extends Controller
             $message = Message::with('report_detail.checkpoint', 'report.security_schedule.site_schedule.site', 'report.security_schedule.site_schedule.schedule', 'report.security_schedule.security_plan.people')
                 ->where('lat', '!=', '-1')
                 ->where('long', '!=', '-1')
+                ->whereHas('report', function ($query) {
+                    $query->where('end', NULL);
+                })
                 ->orderBy('created_at', 'DESC')->get();
 
             $data = [];
